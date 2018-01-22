@@ -11,6 +11,8 @@ import com.test.moviesdb.R;
 
 public class MainActivity extends BaseActivity{
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
 
     @Override
     protected int setActivityLayout() {
