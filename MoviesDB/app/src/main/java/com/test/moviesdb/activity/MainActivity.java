@@ -1,13 +1,17 @@
 package com.test.moviesdb.activity;
 
 import android.content.Context;
+import android.database.MatrixCursor;
+import android.provider.BaseColumns;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.CursorAdapter;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
+import android.widget.SimpleCursorAdapter;
 import android.widget.Toast;
 
 import com.test.moviesdb.R;
@@ -18,7 +22,6 @@ import com.test.moviesdb.api.CallbacksManager;
 import com.test.moviesdb.listener.PaginationScrollListener;
 import com.test.moviesdb.model.MoviesResponseList;
 import com.test.moviesdb.utils.Constant;
-
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -37,11 +40,19 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     private CallbacksManager mCallbacksManager = new CallbacksManager();
     private RecyclerView mRecyclerView;
     private LinearLayoutManager layoutManager;
-    private MoviesAdapter mAdapter;
+    private MoviesAdapter mMoviesAdapter;
     private ProgressBar mProgressBar;
     private SearchView mSearchView;
 
     private boolean isLoading = false;
+
+
+    private static final String[] SUGGESTIONS = {
+            "Bauru", "Sao Paulo", "Rio de Janeiro",
+            "Bahia", "Mato Grosso", "Minas Gerais",
+            "Tocantins", "Rio Grande do Sul"
+    };
+    private SimpleCursorAdapter mAdapter;
 
     private String searchString;
 
@@ -55,11 +66,20 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         mProgressBar = findViewById(R.id.progress_bar);
         mRecyclerView = findViewById(R.id.facts_recycler_view);
         mSearchView = findViewById(R.id.search_view);
+
+        final String[] from = new String[] {"cityName"};
+        final int[] to = new int[] {android.R.id.text1};
+        mAdapter = new SimpleCursorAdapter(this,
+                android.R.layout.simple_list_item_1,
+                null,
+                from,
+                to,
+                CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
     }
 
     @Override
     protected void initValues() {
-        mAdapter = new MoviesAdapter();
+        mMoviesAdapter = new MoviesAdapter();
         layoutManager = new LinearLayoutManager(this);
         mContext=this;
     }
@@ -68,7 +88,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     protected void initValuesInViews() {
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mMoviesAdapter);
         mSearchView.setOnQueryTextListener(this);
 
         //Scroll listener to check if there is a need to load next page
@@ -97,11 +117,29 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             }
         });
 
+
+
+        mSearchView.setSuggestionsAdapter(mAdapter);
+        mSearchView.setIconifiedByDefault(false);
+        mSearchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.i(TAG,"Suggestion Selected");
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.i(TAG,"Suggestion Clicked");
+                return false;
+            }
+        });
+
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        mAdapter.clear();
+        mMoviesAdapter.clear();
         if(query.isEmpty() || (query.trim()).isEmpty())
         {
             return false;
@@ -115,6 +153,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        populateAdapter(newText);
         return false;
     }
 
@@ -127,7 +166,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                 moviesResponseList = (MoviesResponseList) response.body();
 
                 //adding recipes to the list
-                mAdapter.addAll(moviesResponseList.getMovieList());
+                mMoviesAdapter.addAll(moviesResponseList.getMovieList());
                 mProgressBar.setVisibility(View.GONE);
                 isLoading=false;
             }
@@ -143,6 +182,15 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         ApiInterface apiService = ApiClient.getApiService();
         Call<MoviesResponseList> log = apiService.getRecipes(Constant.API_KEY,searchString,pageNumber);
         log.enqueue(moviesRequest);
+    }
 
+    // You must implements your logic to get data using OrmLite
+    private void populateAdapter(String query) {
+        final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, "cityName" });
+        for (int i=0; i<SUGGESTIONS.length; i++) {
+            if (SUGGESTIONS[i].toLowerCase().startsWith(query.toLowerCase()))
+                c.addRow(new Object[] {i, SUGGESTIONS[i]});
+        }
+        mAdapter.changeCursor(c);
     }
 }
