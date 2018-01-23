@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.test.moviesdb.BuildConfig;
 import com.test.moviesdb.MovieApplication;
+import com.test.moviesdb.utils.Constant;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +30,6 @@ public class ApiClient {
 
     private static final String TAG = ApiClient.class.getSimpleName();
 
-    public static final String BASE_URL = "https://api.themoviedb.org/3/search/movie";
     private static final String CACHE_CONTROL = "Cache-Control";
     private static Retrofit retrofit = null;
 
@@ -37,7 +37,7 @@ public class ApiClient {
     public static Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(Constant.BASE_URL)
                     .client(provideOkHttpClient())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();

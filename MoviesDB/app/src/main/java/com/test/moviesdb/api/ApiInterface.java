@@ -12,7 +12,7 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @GET("/api/search")
+    @GET("/3/search/movie")
     Call<MoviesResponseList> getRecipes(@Query("api_key") String key, @Query("query") String searchString, @Query("page") int pageNumber);
 
 }

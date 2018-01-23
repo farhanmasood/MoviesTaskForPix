@@ -18,7 +18,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         initViews();
         initValues();
         initValuesInViews();
-        setListenersOnViews();
     }
 
     protected abstract int setActivityLayout();
@@ -28,6 +27,4 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void initValues();
 
     protected abstract void initValuesInViews();
-
-    protected abstract void setListenersOnViews();
 }

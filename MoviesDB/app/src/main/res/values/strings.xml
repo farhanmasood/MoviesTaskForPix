@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Movies DB</string>
+    <string name="query_hint">Search Movie</string>
+
 </resources>
