@@ -13,4 +13,5 @@ public class Constant {
 
     public static final String IMAGE_PATH_W92 = "https://image.tmdb.org/t/p/w92";
     public static final String IMAGE_PATH_W500 = "https://image.tmdb.org/t/p/w500";
+
 }
