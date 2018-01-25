@@ -1,8 +1,10 @@
 package com.test.moviesdb.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.MatrixCursor;
 import android.provider.BaseColumns;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -36,12 +38,17 @@ import retrofit2.Response;
  * Created by Farhan on 1/22/2018.
  */
 
+/**
+ * MainActivity class which is the entry point to the project which
+ * contains main screen to search movies and display them in a list
+ * based on search query
+ */
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnSuggestionListener, SearchView.OnFocusChangeListener{
-
+    //TAG to display and track logs
     private static final String TAG = MainActivity.class.getSimpleName();
+    //Page start value to load the first 
     private static final int PAGE_START = 1;
     private static final String MOVIE_TEXT = "movie_text";
-
 
     private Context mContext;
     MoviesResponseList moviesResponseList=null;
@@ -183,7 +190,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         }
     }
 
-
     private void getMovies(int pageNumber, final boolean firstRunCheck) {
         if (firstRunCheck) {
             mProgressBar.setVisibility(View.VISIBLE);
@@ -193,11 +199,18 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             protected void response(Response response, View mRecycleView) {
                 moviesResponseList = (MoviesResponseList) response.body();
 
-                if(firstRunCheck && moviesResponseList.getTotalResults()>0)
+                if(firstRunCheck)
                 {
-                    databaseHandler.addSuggestion(searchString);
-                    suggestionsList=databaseHandler.getLastt10Suggestions();
+                    if(moviesResponseList.getTotalResults()>0) {
+                        databaseHandler.addSuggestion(searchString);
+                        suggestionsList = databaseHandler.getLastt10Suggestions();
+                    }
+                    else
+                    {
+                        showAlert("No movies found with this search query...");
+                    }
                 }
+
 
                 //adding recipes to the list
                 mMoviesAdapter.addAll(moviesResponseList.getMovieList());
@@ -207,7 +220,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
             @Override
             protected void failure(Response response, Throwable error) {
-                Toast.makeText(MainActivity.this, "error", Toast.LENGTH_LONG).show();
+                showAlert("There seems to be a problem with your internet, please check and try again.");
+                mProgressBar.setVisibility(View.GONE);
             }
         };
 
@@ -228,5 +242,20 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             }
         }
         mAdapter.changeCursor(c);
+    }
+
+    /* To display some alert messages */
+    private void showAlert(String s)
+    {
+        AlertDialog alertDialog = new AlertDialog.Builder(MainActivity.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage(s);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
     }
 }

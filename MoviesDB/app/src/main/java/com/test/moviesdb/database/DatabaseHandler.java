@@ -8,8 +8,13 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.test.moviesdb.activity.MainActivity;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
+
+	private static final String TAG = DatabaseHandler.class.getSimpleName();
 
 	// All Static variables
 	// Database Version
@@ -36,13 +41,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_SUGGESTION + " TEXT UNIQUE" + ")";
 		db.execSQL(CREATE_CONTACTS_TABLE);
 	}
-
 	// Upgrading database
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// Drop older table if existed
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_SUGGESTIONS);
-
 		// Create tables again
 		onCreate(db);
 	}
@@ -54,13 +57,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	// Adding new suggestion
 	public void addSuggestion(String suggestion) {
 
-		SQLiteDatabase db = this.getWritableDatabase();
+		try {
+			SQLiteDatabase db = this.getWritableDatabase();
+			ContentValues values = new ContentValues();
+			values.put(KEY_SUGGESTION, suggestion.toLowerCase());
+			// Inserting Row
+			db.insert(TABLE_SUGGESTIONS, null, values);
+			db.close(); // Closing database connection
+		}catch (Exception e)
+		{
+			Log.i(TAG,e.toString());
+		}
 
-		ContentValues values = new ContentValues();
-		values.put(KEY_SUGGESTION, suggestion.toLowerCase());
-		// Inserting Row
-		db.insert(TABLE_SUGGESTIONS, null, values);
-		db.close(); // Closing database connection
+
 	}
 
 	

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/card_background">
+
+   <ScrollView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/scrollView2">
+       <RelativeLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content">
+           <TextView
+               android:id="@+id/movie_title_text"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentStart="true"
+               android:text="TextView"
+               android:padding="10dp"
+               android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium" />
+           <LinearLayout
+               android:id="@+id/center_layout"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:weightSum="10"
+               android:layout_below="@id/movie_title_text"
+               android:layout_marginLeft="10dp"
+               android:layout_marginRight="10dp">
+               <ImageView
+                   android:id="@+id/movie_poster_big"
+                   android:layout_below="@id/movie_title_text"
+                   android:layout_width="0dp"
+                   android:layout_height="300dp"
+                   android:layout_alignParentLeft="true"
+                   android:src="@drawable/default_image"
+                   android:layout_weight="6"
+                   android:layout_gravity="left"
+                   />
+               <LinearLayout
+                   android:layout_width="0dp"
+                   android:layout_height="wrap_content"
+                   android:layout_weight="4"
+                   android:layout_gravity="center_vertical"
+                   android:orientation="vertical">
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Vote Average"
+                       android:layout_gravity="center"
+                       android:gravity="center"
+                       />
+                   <TextView
+                       android:id="@+id/vote_average_text"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="10.0"
+                       android:layout_gravity="center"
+                       android:gravity="center"
+                       android:padding="10dp"
+                       android:textColor="@color/fav_color"
+                       />
+                   <TextView
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="Vote Count"
+                       android:layout_gravity="center"
+                       android:gravity="center"
+                       />
+                   <TextView
+                       android:id="@+id/vote_count_text"
+                       android:layout_width="wrap_content"
+                       android:layout_height="wrap_content"
+                       android:text="7321"
+                       android:layout_gravity="center"
+                       android:gravity="center"
+                       android:padding="10dp"
+                       android:textColor="@color/fav_color"
+                       />
+               </LinearLayout>
+
+           </LinearLayout>
+           <TextView
+               android:id="@+id/movie_overview_text"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_alignParentLeft="true"
+               android:layout_alignParentStart="true"
+               android:text="TextView"
+               android:layout_below="@+id/center_layout"
+               android:padding="10dp"/>
+
+
+       </RelativeLayout>
+   </ScrollView>
+
+
+</RelativeLayout>

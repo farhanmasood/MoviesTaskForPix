@@ -2,11 +2,13 @@ package com.test.moviesdb.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
 /**
  * Created by Farhan on 1/22/2018.
  */
 
-public class Movie {
+public class Movie implements Serializable {
 
     @SerializedName("title")
     private String movieTitle;
@@ -76,5 +78,4 @@ public class Movie {
                 ", overview='" + overview + '\'' +
                 '}';
     }
-
 }

@@ -8,7 +8,10 @@ import android.support.v7.app.AppCompatActivity;
  * Created by Farhan on 1/22/2018.
  */
 
-//Baseactivity to have code which will be common in all activities
+/*
+ * Baseactivity class to have code which will be common in all activities
+ * Mostly the abstract functions which will be implemented in each activity
+ */
 public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
