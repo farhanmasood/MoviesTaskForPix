@@ -68,17 +68,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		{
 			Log.i(TAG,e.toString());
 		}
-
-
+		adjustSuggestionsCount();
 	}
 
-	
-	// Getting to 10 suggestions
+	// Getting contacts Count
+	private void adjustSuggestionsCount() {
+		String countQuery = "SELECT  * FROM " + TABLE_SUGGESTIONS;
+		SQLiteDatabase db = this.getReadableDatabase();
+		Cursor cursor = db.rawQuery(countQuery, null);
+		if(cursor.getCount() > 10)
+		{
+			if (cursor.moveToFirst()) {
+				deleteSuggestion(Integer.parseInt(cursor.getString(0)));
+			}
+		}
+		cursor.close();
+		db.close();
+	}
+	// To delete a suggestions based on id
+	private void deleteSuggestion(int id) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_SUGGESTIONS, KEY_ID + " = ?",
+				new String[] { String.valueOf(id) });
+		db.close();
+	}
+
+	// Getting last 10 suggestions
 	public List<String> getLastt10Suggestions() {
 		List<String> suggestionsList = new ArrayList<String>();
 		// Select All Query
 		//String selectQuery = "SELECT  * FROM " + TABLE_SUGGESTIONS;
-
 		String selectQuery = "SELECT * FROM " + TABLE_SUGGESTIONS+" ORDER BY "+KEY_ID+" DESC LIMIT 10";
 
 		SQLiteDatabase db = this.getWritableDatabase();
@@ -90,7 +109,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 				suggestionsList.add(cursor.getString(1));
 			} while (cursor.moveToNext());
 		}
-
 		return suggestionsList;
 	}
 }
