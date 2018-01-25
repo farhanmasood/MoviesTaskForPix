@@ -21,6 +21,7 @@ public class MovieDetails extends BaseActivity {
 
     @Override
     protected int setActivityLayout() {
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         return R.layout.activity_movie_details;
     }
 

@@ -1,5 +1,6 @@
 package com.test.moviesdb.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v4.widget.SimpleCursorAdapter;
@@ -119,6 +120,8 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                     Intent intent=new Intent(mContext, MovieDetails.class);
                     intent.putExtra(Constant.MOVIE_OBJECT,movie);
                     mContext.startActivity(intent);
+                    Activity activity=(Activity)mContext;
+                    activity.overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
                 }
             });
         }
