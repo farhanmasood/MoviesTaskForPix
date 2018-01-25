@@ -46,39 +46,101 @@ import retrofit2.Response;
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnSuggestionListener, SearchView.OnFocusChangeListener{
     //TAG to display and track logs
     private static final String TAG = MainActivity.class.getSimpleName();
-    //Page start value to load the first 
+
+    //Page start value to get the first page in search query from movies API
     private static final int PAGE_START = 1;
+
+    //Movie text constant to use as column name in SimpleCursor Adapter
     private static final String MOVIE_TEXT = "movie_text";
 
+    //To store the context of this activity
     private Context mContext;
+
+    //MoviesResponseList model object to store the response from API query
     MoviesResponseList moviesResponseList=null;
+
+    //Callbacksmanager object to hanlde all callbacks from API queries
     private CallbacksManager mCallbacksManager = new CallbacksManager();
+
+    //Variables to be used for mapping from xml to java
     private RecyclerView mRecyclerView;
     private LinearLayoutManager layoutManager;
-    private MoviesAdapter mMoviesAdapter;
     private ProgressBar mProgressBar;
     private SearchView mSearchView;
     private LinearLayout rootView;
+    //*
+
+    //Movies adapted to handle movies list
+    private MoviesAdapter mMoviesAdapter;
+
+    //databasehandler object to store successful suggestions
     DatabaseHandler databaseHandler;
+
+    //isLoading is used to check if the API call is completed or still in place
     private boolean isLoading = false;
+
+    //String list to store last 10 suggestions
     private List<String> suggestionsList;
 
+    //Simple cursor adapter to be used for suggestions handling
     private SimpleCursorAdapter mAdapter;
 
+    //To store the main search query
     private String searchString;
 
+    //Setting up mainactivities xml file to the main view
     @Override
     protected int setActivityLayout() {
         return R.layout.activity_main;
     }
 
+    //Binding java variables to xml views
     @Override
     protected void initViews() {
         mProgressBar = findViewById(R.id.progress_bar);
         mRecyclerView = findViewById(R.id.facts_recycler_view);
         mSearchView = findViewById(R.id.search_view);
-        rootView=(LinearLayout)findViewById(R.id.rootView);
+        rootView=findViewById(R.id.rootView);
         rootView.requestFocus();
+    }
+
+    //Initializing local variables
+    @Override
+    protected void initValues() {
+        mContext=this;
+        mMoviesAdapter = new MoviesAdapter();
+        layoutManager = new LinearLayoutManager(this);
+        databaseHandler = new DatabaseHandler(this);
+        suggestionsList=databaseHandler.getLastt10Suggestions();
+    }
+
+    //Setting up values in variables which are bounded to view
+    @Override
+    protected void initValuesInViews() {
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        mRecyclerView.setAdapter(mMoviesAdapter);
+
+
+        setupSuggestionsAdapter(0);
+
+    }
+
+    /*
+    * This function's first sets up the minimum threshold value for searchview to show suggestions as a list
+    * For now we are setting up threshold to 0 because we want to display suggestions list even if user haven't
+    * typed a single character.
+    * The second step is to create a cursor adapter for suggestions list which will be displayed with searchview
+    * Then finally setting up cursor adapter to searchView
+    */
+    private void setupSuggestionsAdapter(int threshold)
+    {
+        //Setting up threshold
+        int autoCompleteTextViewID = getResources().getIdentifier("android:id/search_src_text", null, null);
+        AutoCompleteTextView searchAutoCompleteTextView = (AutoCompleteTextView) mSearchView.findViewById(autoCompleteTextViewID);
+        searchAutoCompleteTextView.setThreshold(threshold);
+
+        //Creating cursor adapter
         final String[] from = new String[] {MOVIE_TEXT};
         final int[] to = new int[] {android.R.id.text1};
         mAdapter = new SimpleCursorAdapter(this,
@@ -87,32 +149,12 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                 from,
                 to,
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-    }
 
-    @Override
-    protected void initValues() {
-        mMoviesAdapter = new MoviesAdapter();
-        layoutManager = new LinearLayoutManager(this);
-        mContext=this;
-        databaseHandler = new DatabaseHandler(this);
-        suggestionsList=databaseHandler.getLastt10Suggestions();
-    }
-
-    @Override
-    protected void initValuesInViews() {
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        mRecyclerView.setAdapter(mMoviesAdapter);
-
-
-        int autoCompleteTextViewID = getResources().getIdentifier("android:id/search_src_text", null, null);
-        AutoCompleteTextView searchAutoCompleteTextView = (AutoCompleteTextView) mSearchView.findViewById(autoCompleteTextViewID);
-        searchAutoCompleteTextView.setThreshold(0);
-
+        //assigning cursor adapter for suggestions to searchview
         mSearchView.setSuggestionsAdapter(mAdapter);
-
     }
 
+    //If some views required to implement their listeners this functions sets up listeners for them
     @Override
     protected void setListenersOnViews() {
 
@@ -120,8 +162,10 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         mSearchView.setOnSuggestionListener(this);
         mSearchView.setOnQueryTextFocusChangeListener(this);
 
-        //Scroll listener to check if there is a need to load next page
+        //Scroll listener to check if there is a need to load next page and then to load the next page
         mRecyclerView.addOnScrollListener(new PaginationScrollListener(layoutManager) {
+
+            //This functions loads more items if
             @Override
             protected void loadMoreItems() {
                 Log.e("recyclerview", "loadMoreItems");

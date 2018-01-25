@@ -26,11 +26,11 @@ public class MovieDetails extends BaseActivity {
 
     @Override
     protected void initViews() {
-        movieTitle=(TextView) findViewById(R.id.movie_title_text);
-        moviePoster=(ImageView) findViewById(R.id.movie_poster_big);
-        movieVoteAverage=(TextView) findViewById(R.id.vote_average_text);
-        movieVoteCount=(TextView) findViewById(R.id.vote_count_text);
-        movieOverview=(TextView) findViewById(R.id.movie_overview_text);
+        movieTitle=findViewById(R.id.movie_title_text);
+        moviePoster = findViewById(R.id.movie_poster_big);
+        movieVoteAverage = findViewById(R.id.vote_average_text);
+        movieVoteCount = findViewById(R.id.vote_count_text);
+        movieOverview = findViewById(R.id.movie_overview_text);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class MovieDetails extends BaseActivity {
     protected void initValuesInViews() {
         movieTitle.setText(mMovie.getMovieTitle());
         movieVoteAverage.setText(mMovie.getVoteAverage()+"");
-        movieVoteCount.setText(mMovie.getVoteCount()+"");
+        movieVoteCount.setText("("+mMovie.getVoteCount()+")");
         movieOverview.setText(mMovie.getOverview());
         if(mMovie.getMoviePoster()!=null)
         {
