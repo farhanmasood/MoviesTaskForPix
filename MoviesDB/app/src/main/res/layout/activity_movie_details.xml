@@ -87,7 +87,12 @@
                android:maxLines="100"
                android:paddingLeft="10dp"
                android:paddingRight="10dp"
-               android:paddingBottom="10dp"/>
+               android:paddingBottom="10dp"
+               />
+           <View
+               android:layout_width="match_parent"
+               android:layout_height="10dp"
+               />
        </LinearLayout>
    </ScrollView>
 

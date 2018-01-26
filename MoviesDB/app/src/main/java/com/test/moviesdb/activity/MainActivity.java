@@ -114,13 +114,12 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     //Setting up values in variables which are bounded to view
     @Override
     protected void initValuesInViews() {
+
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
         mRecyclerView.setAdapter(mMoviesAdapter);
 
-
         setupSuggestionsAdapter(0);
-
     }
 
     /*
