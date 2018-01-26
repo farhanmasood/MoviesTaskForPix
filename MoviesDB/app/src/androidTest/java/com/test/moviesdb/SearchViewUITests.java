@@ -29,6 +29,12 @@ import static org.hamcrest.Matchers.not;
  * Created by Farhan on 1/26/2018.
  */
 
+/**
+ * UI test, which will execute on an Android device.
+ * This class have all the UI tests which I have written to test the functionality of
+ * searchView with suggestions e.g is it properly loading suggestions
+ */
+
 public class SearchViewUITests extends ActivityInstrumentationTestCase2<MainActivity> {
 
     Context context;
