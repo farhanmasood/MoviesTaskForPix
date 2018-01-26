@@ -279,7 +279,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             }
         };
 
-
         //Adding network call to the queue
         ApiInterface apiService = ApiClient.getApiService();
         Call<MoviesResponseList> log = apiService.getRecipes(Constant.API_KEY,searchString,pageNumber);

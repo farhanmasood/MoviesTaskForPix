@@ -3,13 +3,11 @@ package com.test.moviesdb.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.squareup.picasso.Picasso;
@@ -93,7 +91,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return movies.get(position);
     }
 
-    //viewholder class to handle the view in the list and to map the movie information to that view
+    //Viewholder class to handle the view in the list and to map the movie information to that view
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView movieTitle;
         private TextView voteAvergae;
@@ -116,11 +114,13 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 String image_path= Constant.IMAGE_PATH_W92+movie.getMoviePoster();
                 Picasso.with(mContext).load(image_path).into(moviePoster);
             }
+
             //handling on click event for a specific movie in the list
             itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent=new Intent(mContext, MovieDetails.class);
+                    //passing current movie object as serialized object
                     intent.putExtra(Constant.MOVIE_OBJECT,movie);
                     mContext.startActivity(intent);
                     Activity activity=(Activity)mContext;

@@ -25,15 +25,17 @@ import static okhttp3.logging.HttpLoggingInterceptor.Level.NONE;
  * Created by Farhan on 1/22/2018.
  */
 
+/*
+ * API client class for Retrofit to create and request API calls
+ */
 public class ApiClient {
-
-
+    //TAG for debugging and logging purpose
     private static final String TAG = ApiClient.class.getSimpleName();
 
     private static final String CACHE_CONTROL = "Cache-Control";
     private static Retrofit retrofit = null;
 
-
+    //Function to get Retrofit object with all the settings including base url of the API
     public static Retrofit getClient() {
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
@@ -45,6 +47,7 @@ public class ApiClient {
         return retrofit;
     }
 
+    //Function to get OkHttpClient object with all the settings
     private static OkHttpClient provideOkHttpClient() {
         return new OkHttpClient.Builder()
                 .addInterceptor(provideHttpLoggingInterceptor())
@@ -54,6 +57,7 @@ public class ApiClient {
                 .build();
     }
 
+    //Cache settings
     private static Cache provideCache() {
         Cache cache = null;
         try {
@@ -118,7 +122,9 @@ public class ApiClient {
         };
     }
 
+    //Function to get ApiInterface
     public static ApiInterface getApiService() {
+
         return getClient().create(ApiInterface.class);
     }
 }

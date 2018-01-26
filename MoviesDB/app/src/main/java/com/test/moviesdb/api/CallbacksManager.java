@@ -14,6 +14,10 @@ import retrofit2.Response;
  * Created by Farhan on 1/22/2018.
  */
 
+/*
+ * CallbacksManager to handle callbacks of server requests
+ */
+
 public class CallbacksManager {
     private Set<CancelableCallback> callbacks = new HashSet<>();
 
@@ -146,8 +150,8 @@ public class CallbacksManager {
             removeCallback(this);
         }
 
+        // Abstract methods to be implemented by the class using it, to handle response or failure
         protected abstract void response(Response response, View view);
-
         protected abstract void failure(Response response, Throwable error);
 
     }

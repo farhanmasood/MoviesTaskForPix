@@ -8,6 +8,11 @@ import java.io.Serializable;
  * Created by Farhan on 1/22/2018.
  */
 
+
+/*
+ * Movie Model Class
+ */
+
 public class Movie implements Serializable {
 
     @SerializedName("title")

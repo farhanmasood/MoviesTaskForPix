@@ -42,7 +42,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_CONTACTS_TABLE = "CREATE TABLE " + TABLE_SUGGESTIONS + "("
-				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_SUGGESTION + " TEXT UNIQUE" + ")";
+				+ KEY_ID + " INTEGER PRIMARY KEY," + KEY_SUGGESTION + " TEXT " + ")";
 		db.execSQL(CREATE_CONTACTS_TABLE);
 	}
 
@@ -63,9 +63,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public void addSuggestion(String suggestion) {
 
 		try {
+			//delete suggestion if exists so it can be added at the end
+			deleteSuggestion(suggestion);
+
 			SQLiteDatabase db = this.getWritableDatabase();
 			ContentValues values = new ContentValues();
 			values.put(KEY_SUGGESTION, suggestion.toLowerCase());
+
 			// Inserting suggestion
 			db.insert(TABLE_SUGGESTIONS, null, values);
 			db.close();
@@ -92,11 +96,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		cursor.close();
 		db.close();
 	}
-	// function to delete a suggestions based on id
+
+	// Helper function to delete a suggestions based on id
 	private void deleteSuggestion(int id) {
 		SQLiteDatabase db = this.getWritableDatabase();
 		db.delete(TABLE_SUGGESTIONS, KEY_ID + " = ?",
 				new String[] { String.valueOf(id) });
+		db.close();
+	}
+
+	// Helper function to delete a suggestions based on suggestion text
+	private void deleteSuggestion(String s) {
+		SQLiteDatabase db = this.getWritableDatabase();
+		db.delete(TABLE_SUGGESTIONS, KEY_SUGGESTION + " = ?",
+				new String[] { String.valueOf(s) });
 		db.close();
 	}
 

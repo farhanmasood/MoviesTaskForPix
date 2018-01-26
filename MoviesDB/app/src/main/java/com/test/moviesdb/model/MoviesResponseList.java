@@ -8,6 +8,11 @@ import java.util.List;
  * Created by Farhan on 1/22/2018.
  */
 
+/*
+ * MovieResponseModel Class to store list of movies
+ */
+
+
 public class MoviesResponseList {
     @SerializedName("page")
     private int pageNumber;

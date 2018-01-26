@@ -6,6 +6,9 @@ import com.test.moviesdb.activity.MainActivity;
  * Created by Farhan on 1/23/2018.
  */
 
+/*
+ * Constant class to only contain generic constants which can be used anywhere in the application
+ */
 public class Constant {
 
     public static final String BASE_URL = "http://api.themoviedb.org";

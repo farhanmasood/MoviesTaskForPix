@@ -10,6 +10,9 @@ import retrofit2.http.Query;
  * Created by Farhan on 1/22/2018.
  */
 
+/*
+ * API Interface for API calls using Retrofit
+ */
 public interface ApiInterface {
 
     @GET("/3/search/movie")
