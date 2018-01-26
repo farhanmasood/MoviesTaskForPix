@@ -20,8 +20,8 @@ project more robust and elegant e.g for suggestions manipulation in searchview I
 the possible scenarios 
 
 -Although the requirement was to only store last 10 suggestions which can be stored in shared preferences too, but I preferred
-to use SQLite database because it becomes very easy to expand for instance during an interview you ask to change the last
-suggestions size to 15 to 20 then I just have to change one value and it will be done.
+to use SQLite database because it becomes very easy to expand for instance during an interview you might ask to change the last
+suggestions size from 10 to 20 then I just have to change one value and it will be done.
 
 -Although I am not a UI expert but based on my experience with applications, I have tried to make design of the app as
 decent and elegant as possible.
@@ -45,13 +45,13 @@ Problems Faced During Project & Solution:
 -Overall it was a simple project there were not much issues but the last 10 suggestions part was a bit tricky so I faced
 following issue.
 
--While storing suggestions in database I used the query to get last 10 records in descending order and used LIMIT filed 
+-While storing suggestions in database I used the query to get last 10 records in descending order and used LIMIT field 
 to limit them to 10 records. So it was inserting all suggestions but only bringing back last 10. So if 'batman' is inserted into
 the table it is not going to be inserted again because I used UNIQUE attribute for that field. Initialy it worked fine but when
 the count of the suggestions inserted in database increased, it was not inserting the suggestion 'batman' because it was already
 there and also was not bringing because the query was only bringing back last 10 suggestions. 
-So I was happy that I found this bug and then started to think how can I handle this so I wrote some helper functions in DatabaseHandler
-that after each suggestion insertion in database I check if the count of suggestions stored in database is greater than 10 it should
+So I was happy that I found this bug and then started to think how can I handle this so I wrote some helper functions in DatabaseHandler,
+so that after each suggestion inserted in database, I check if the count of suggestions stored in database is greater than 10, then it should
 remove the oldest suggestion from the list to handle the issue mentioned above.
 
 
