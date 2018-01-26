@@ -16,9 +16,13 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 /**
+ * Created by Farhan on 1/26/2018.
+ */
+
+/**
  * Instrumented test, which will execute on an Android device.
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
+ * This class have all the tests related to Suggestions database
+ * which we are using to display suggestions in searchView
  */
 @RunWith(AndroidJUnit4.class)
 public class SuggestionsDatabaseInstrumentedTests {
@@ -124,5 +128,4 @@ public class SuggestionsDatabaseInstrumentedTests {
         //The size of the suggestions list should still not exceed 10
         assertEquals("Suggestions list size",10,suggestionsList.size());
     }
-
 }
