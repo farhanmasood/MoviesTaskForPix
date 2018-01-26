@@ -39,6 +39,7 @@ public class SearchViewUITests extends ActivityInstrumentationTestCase2<MainActi
 
     Context context;
     String sampleSuggestionText="batman";
+    String sampleSuggestionText2="spider man";
     DatabaseHandler suggestionsDatabase;
 
     public SearchViewUITests() {
@@ -56,12 +57,25 @@ public class SearchViewUITests extends ActivityInstrumentationTestCase2<MainActi
     public void testLoadingOfSuggestionsOnSearchViewClick()
     {
         List<String> suggestionsList=suggestionsDatabase.getLastt10Suggestions();
+
         //if existing suggestion list is empty, adding a suggestion to test
         if(suggestionsList.isEmpty())
         {
-            suggestionsDatabase.addSuggestion("godfather ");
+            //Gain focus of searchView
+            onView(withId(R.id.search_view)).perform(click());
+
+            //inserting a sample suggestion
+            onView(isAssignableFrom(EditText.class)).perform(typeText(sampleSuggestionText2), pressImeActionButton());
+
+            // hide keyboard
+            pressBack();
+
+            // Clear the text in search field
+            onView(isAssignableFrom(EditText.class)).perform(clearText());
+
             suggestionsList=suggestionsDatabase.getLastt10Suggestions();
         }
+
         //Performing click in searchview to gain focus
         onView(withId(R.id.search_view)).perform(click());
 
@@ -93,5 +107,4 @@ public class SearchViewUITests extends ActivityInstrumentationTestCase2<MainActi
                 .inRoot(withDecorView(not(Matchers.is(getActivity().getWindow().getDecorView()))))
                 .check(matches(isDisplayed()));
     }
-
 }
