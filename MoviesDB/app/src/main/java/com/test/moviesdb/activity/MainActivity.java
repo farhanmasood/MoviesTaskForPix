@@ -16,9 +16,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SearchView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.test.moviesdb.R;
 import com.test.moviesdb.adapter.MoviesAdapter;
 import com.test.moviesdb.api.ApiClient;
@@ -165,16 +162,18 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         //Scroll listener to check if there is a need to load next page and then to load the next page
         mRecyclerView.addOnScrollListener(new PaginationScrollListener(layoutManager) {
 
-            //This functions loads more items if
+            //This functions loads more items if there are more page/s available from API response
             @Override
             protected void loadMoreItems() {
                 Log.e("recyclerview", "loadMoreItems");
                 isLoading = true;
                 mProgressBar.setVisibility(View.VISIBLE);
                 if(moviesResponseList!=null)
+                    //Getting next page of API response
                     getMovies(moviesResponseList.getPageNumber()+1, false);
             }
 
+            //to check if the current page is last page
             @Override
             public boolean isLastPage() {
                 if(moviesResponseList!=null)
@@ -191,9 +190,11 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         });
     }
 
+    //search query text submission listener
     @Override
     public boolean onQueryTextSubmit(String query) {
         mMoviesAdapter.clear();
+        //to check for empty query
         if(query.isEmpty() || (query.trim()).isEmpty())
         {
             return false;
@@ -205,58 +206,66 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         return false;
     }
 
+    //listener to track query changes in searchView
     @Override
     public boolean onQueryTextChange(String newText) {
+        //if there is a change in query populate new suggestions list according to that
         populateAdapter(newText);
         return false;
     }
 
+    //On suggestion select listener haven't been used in our code.
     @Override
     public boolean onSuggestionSelect(int position) {
-        Log.i(TAG,"Suggestion Selected");
         return false;
     }
-
+    //on suggestion click listener
     @Override
     public boolean onSuggestionClick(int position) {
 
-        Log.i(TAG,"Search term selected");
+        //setting the query text to searchView from suggestions selection and submitting the query
         mSearchView.setQuery(suggestionsList.get(position), true);
         return false;
     }
 
+    //Focus change listener for searchView
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if(hasFocus)
         {
-            Log.i(TAG,"Got Focus");
+            //populate suggestions list if searchView got focus
             populateAdapter("");
         }
     }
 
+    //main function to retrieve movies from server for the specified searchString
     private void getMovies(int pageNumber, final boolean firstRunCheck) {
-        if (firstRunCheck) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        }
+
+        // Creating cancelablecallback for movie request
         CallbacksManager.CancelableCallback moviesRequest = mCallbacksManager.new CancelableCallback(null) {
+
+            //on receiving response from movieRequest
             @Override
             protected void response(Response response, View mRecycleView) {
                 moviesResponseList = (MoviesResponseList) response.body();
 
+                //if it is first run means it is the first page of the query
                 if(firstRunCheck)
                 {
+                    //check for successful query
                     if(moviesResponseList.getTotalResults()>0) {
+                        //adding suggestion to database if the query was successful
                         databaseHandler.addSuggestion(searchString);
                         suggestionsList = databaseHandler.getLastt10Suggestions();
                     }
                     else
                     {
+                        //showing alert if no movies found
                         showAlert("No movies found with this search query...");
                     }
                 }
 
-
-                //adding recipes to the list
+                //adding recipes to movies adapter
                 mMoviesAdapter.addAll(moviesResponseList.getMovieList());
                 mProgressBar.setVisibility(View.GONE);
                 isLoading=false;
@@ -264,19 +273,20 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
             @Override
             protected void failure(Response response, Throwable error) {
+                //showing alert if the server request failed due to network error
                 showAlert("There seems to be a problem with your internet, please check and try again.");
                 mProgressBar.setVisibility(View.GONE);
             }
         };
 
 
-        //Adding network call
+        //Adding network call to the queue
         ApiInterface apiService = ApiClient.getApiService();
         Call<MoviesResponseList> log = apiService.getRecipes(Constant.API_KEY,searchString,pageNumber);
         log.enqueue(moviesRequest);
     }
 
-    // You must implements your logic to get data using OrmLite
+    // implementation load suggestions on each character change in the search query
     private void populateAdapter(String query) {
 
         final MatrixCursor c = new MatrixCursor(new String[]{ BaseColumns._ID, MOVIE_TEXT });

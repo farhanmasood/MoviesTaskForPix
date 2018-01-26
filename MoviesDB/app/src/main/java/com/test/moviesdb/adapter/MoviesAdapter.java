@@ -26,6 +26,7 @@ import java.util.List;
  * Created by Farhan on 1/22/2018.
  */
 
+// Adapter to implement functions for Recyclerview Adapter
 public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private ArrayList<Movie> movies;
@@ -58,7 +59,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     }
 
     /**
-     * Helpers
+     * Helpers functions for adapter
      */
 
     public void add(Movie movie) {
@@ -92,6 +93,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         return movies.get(position);
     }
 
+    //viewholder class to handle the view in the list and to map the movie information to that view
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView movieTitle;
         private TextView voteAvergae;
@@ -100,10 +102,10 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
         public ViewHolder(View itemView) {
             super(itemView);
-            movieTitle = (TextView) itemView.findViewById(R.id.movie_title);
-            voteAvergae = (TextView) itemView.findViewById((R.id.vote_average));
-            moviePoster = (ImageView) itemView.findViewById(R.id.movie_poster);
-            itemLayout = (RelativeLayout) itemView.findViewById(R.id.item_layout);
+            movieTitle = itemView.findViewById(R.id.movie_title);
+            voteAvergae = itemView.findViewById((R.id.vote_average));
+            moviePoster = itemView.findViewById(R.id.movie_poster);
+            itemLayout = itemView.findViewById(R.id.item_layout);
         }
 
         public void bind(final Movie movie) {
@@ -114,6 +116,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 String image_path= Constant.IMAGE_PATH_W92+movie.getMoviePoster();
                 Picasso.with(mContext).load(image_path).into(moviePoster);
             }
+            //handling on click event for a specific movie in the list
             itemLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
