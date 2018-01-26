@@ -1,4 +1,58 @@
 #Test-Task for PixFormance
 
- 
+
+
+Project Duration: 
+I have spent 20 hours to complete this project.
+
+
+
+My Approach Towards This Project:
+-I have tried to structure the project in a very simple way. I have used directories to separate different types of java 
+files e.g. activity directory only contains activity classes.
+
+-I have tried to write very simple, clean and self explanatory code but still added comments to make it more elaborative.
+
+-I have maximised the use of Android's builtin standard features wherever availble instead of writing my own to make the 
+project more robust and elegant e.g for suggestions manipulation in searchview I have used SimpleCursorAdapter.
+
+-I have written UI tests for searchview and Suggestions and Instrument Unit tests for SuggestionsDatabase to test most of
+the possible scenarios 
+
+-Although the requirement was to only store last 10 suggestions which can be stored in shared preferences too, but I preferred
+to use SQLite database because it becomes very easy to expand for instance during an interview you ask to change the last
+suggestions size to 15 to 20 then I just have to change one value and it will be done.
+
+-Although I am not a UI expert but based on my experience with applications, I have tried to make design of the app as
+decent and elegant as possible.
+
+
+
+External or Thir Party Libraries/Frameworks:
+-I have used 'Retrofit' framework and all its dependent libraries to handle API calls for server. It simpilifies the use of 
+client server communication and provides easy mapping of JSON data to model classes.
+
+-I have used 'Picasso' library for loading images to my imageViews from URL path. Again it simpilifies the process of caching
+and loading images and provides a lot of feature to handle image loading in different sizes.
+
+-I have used 'MaterialDesignLibrary' to follow meterial design practises
+
+- Rest all other libraries used in this project are provided by Android e.g. JUnit and Espresso.
+
+
+
+Problems Faced During Project & Solution:
+-Overall it was a simple project there were not much issues but the last 10 suggestions part was a bit tricky so I faced
+following issue.
+
+-While storing suggestions in database I used the query to get last 10 records in descending order and used LIMIT filed 
+to limit them to 10 records. So it was inserting all suggestions but only bringing back last 10. So if 'batman' is inserted into
+the table it is not going to be inserted again because I used UNIQUE attribute for that field. Initialy it worked fine but when
+the count of the suggestions inserted in database increased, it was not inserting the suggestion 'batman' because it was already
+there and also was not bringing because the query was only bringing back last 10 suggestions. 
+So I was happy that I found this bug and then started to think how can I handle this so I wrote some helper functions in DatabaseHandler
+that after each suggestion insertion in database I check if the count of suggestions stored in database is greater than 10 it should
+remove the oldest suggestion from the list to handle the issue mentioned above.
+
+
 

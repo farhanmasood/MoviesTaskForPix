@@ -19,4 +19,7 @@ public class Constant {
 
     public static final String MOVIE_OBJECT = "movie_object";
 
+    public static final int LAST_SUGGESTIONS_COUNT = 10;
+
+
 }

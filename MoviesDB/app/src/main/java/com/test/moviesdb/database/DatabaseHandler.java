@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.test.moviesdb.activity.MainActivity;
+import com.test.moviesdb.utils.Constant;
 
 /*
  * Database handler class for the purpose of storage and retrieval of suggestions.
@@ -86,7 +87,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 		String countQuery = "SELECT  * FROM " + TABLE_SUGGESTIONS;
 		SQLiteDatabase db = this.getReadableDatabase();
 		Cursor cursor = db.rawQuery(countQuery, null);
-		if(cursor.getCount() > 10)
+		if(cursor.getCount() > Constant.LAST_SUGGESTIONS_COUNT)
 		{
 			//if the count increases 10 suggestions remove oldest suggestion
 			if (cursor.moveToFirst()) {
@@ -117,7 +118,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 	public List<String> getLastt10Suggestions() {
 		List<String> suggestionsList = new ArrayList<String>();
 		// select query with limit of 10 and descending order to show last suggestion on top
-		String selectQuery = "SELECT * FROM " + TABLE_SUGGESTIONS+" ORDER BY "+KEY_ID+" DESC LIMIT 10";
+		String selectQuery = "SELECT * FROM " + TABLE_SUGGESTIONS+" ORDER BY "+KEY_ID+" DESC LIMIT "+Constant.LAST_SUGGESTIONS_COUNT;
 		SQLiteDatabase db = this.getWritableDatabase();
 		Cursor cursor = db.rawQuery(selectQuery, null);
 
