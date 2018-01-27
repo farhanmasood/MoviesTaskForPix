@@ -2,6 +2,7 @@ package com.test.moviesdb.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.MatrixCursor;
 import android.provider.BaseColumns;
 import android.support.v7.app.AlertDialog;
@@ -223,7 +224,9 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     public boolean onSuggestionClick(int position) {
 
         //setting the query text to searchView from suggestions selection and submitting the query
-        mSearchView.setQuery(suggestionsList.get(position), true);
+        Cursor cursor = (Cursor) mAdapter.getItem(position);
+        String s=cursor.getString(1);
+        mSearchView.setQuery(s, true);
         return false;
     }
 
